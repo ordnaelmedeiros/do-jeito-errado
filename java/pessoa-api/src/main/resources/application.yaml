@@ -1,0 +1,4 @@
+quarkus:
+  swagger-ui:
+    theme: original
+    always-include: true
