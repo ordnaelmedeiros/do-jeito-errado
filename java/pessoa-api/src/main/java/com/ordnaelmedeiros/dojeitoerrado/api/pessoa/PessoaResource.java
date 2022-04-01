@@ -10,6 +10,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 
 import org.jboss.resteasy.reactive.ResponseStatus;
 import org.jboss.resteasy.reactive.RestPath;
@@ -31,6 +34,8 @@ public class PessoaResource {
 	@Inject PessoaUpdateService updateService;
 	@Inject PessoaDeleteService deleteService;
 	
+	@Context Request request;
+	
 	@GET @Path("all")
 	public List<PessoaDTOView> all() {
 		return readService.all();
@@ -43,8 +48,8 @@ public class PessoaResource {
 	}
 	
 	@GET @Path("{id}")
-	public PessoaDTOView read(UUID id) {
-		return readService.read(id);
+	public Response read(@RestPath("id") UUID id) {
+		return readService.read(id, request);
 	}
 	
 	@Transactional

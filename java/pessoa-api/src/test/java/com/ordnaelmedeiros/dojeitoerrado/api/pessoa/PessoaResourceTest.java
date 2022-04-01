@@ -25,6 +25,8 @@ import io.restassured.specification.RequestSpecification;
 class PessoaResourceTest {
 
 	private static UUID id;
+	private static String etag;
+	private static String lastModified;
 	
 	@Test @Order(1)
 	void create() {
@@ -44,6 +46,18 @@ class PessoaResourceTest {
 	}
 	
 	@Test @Order(2)
+	void browserCachePost() {
+		var extract = when().get("/{id}", id).then().statusCode(200).extract();
+		etag = extract.header("etag");
+		lastModified = extract.header("last-modified");
+		when()
+			.header("If-None-Match", etag)
+			.header("If-Modified-Since", lastModified)
+			.get("/{id}", id)
+			.then().statusCode(304);
+	}
+	
+	@Test @Order(3)
 	void update() {
 		// GIVEN
 		var dto = new PessoaDTOUpdate();
@@ -57,7 +71,25 @@ class PessoaResourceTest {
 			.body("nome", is(dto.getNome()));
 	}
 	
-	@Test @Order(3)
+	@Test @Order(4)
+	void browserCachePut() {
+		var extract = when()
+				.header("If-None-Match", etag)
+				.header("If-Modified-Since", lastModified)
+				.get("/{id}", id)
+				.then()
+					.statusCode(200)
+					.extract();
+		etag = extract.header("etag");
+		lastModified = extract.header("last-modified");
+		when()
+			.header("If-None-Match", etag)
+			.header("If-Modified-Since", lastModified)
+			.get("/{id}", id)
+				.then().statusCode(304);
+	}
+	
+	@Test @Order(5)
 	void delete() {
 		// WHEN
 		when().delete("{id}", id).then().statusCode(204);

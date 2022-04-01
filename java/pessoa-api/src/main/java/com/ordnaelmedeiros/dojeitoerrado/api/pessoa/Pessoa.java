@@ -1,36 +1,20 @@
 package com.ordnaelmedeiros.dojeitoerrado.api.pessoa;
 
-import java.util.UUID;
-
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
-@Entity @Table(name = "pessoa")
-public class Pessoa {
+import com.ordnaelmedeiros.dojeitoerrado.core.entitys.EntityBase;
 
-	@Id
-	private UUID id;
+@Entity @Table(name = "pessoa")
+public class Pessoa extends EntityBase {
+
 	private String nome;
-	
-	public UUID getId() {
-		return id;
-	}
-	public void setId(UUID id) {
-		this.id = id;
-	}
 	
 	public String getNome() {
 		return nome;
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-	
-	@PrePersist
-	void prePersist() {
-		id = UUID.randomUUID();
 	}
 	
 }
