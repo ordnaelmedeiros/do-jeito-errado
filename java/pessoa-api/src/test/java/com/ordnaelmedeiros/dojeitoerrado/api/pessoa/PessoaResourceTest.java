@@ -97,6 +97,18 @@ class PessoaResourceTest {
 		when().get("{id}", id).then().statusCode(404);
 	}
 	
+	@Test @Order(99)
+	void updateNotFound() {
+		var dto = new PessoaDTOUpdate();
+		dto.setNome("teste");
+		when(dto).put("{id}", UUID.randomUUID()).then().statusCode(404);
+	}
+	
+	@Test @Order(99)
+	void deleteNotFound() {
+		when().delete("{id}", UUID.randomUUID()).then().statusCode(404);
+	}
+	
 	private RequestSpecification when() {
 		return given().when()
 			.contentType(ContentType.JSON)

@@ -20,7 +20,9 @@ public class PessoaUpdateService {
 		pessoaRepository
 			.findByIdOptional(id)
 			.ifPresentOrElse(
-				e -> pessoaAdapter.toEntity(dto, e),
+				e -> {
+					pessoaAdapter.toEntity(dto, e);
+				},
 				ExceptionUtils::throwNotFoundException);
 	}
 	
